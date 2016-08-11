@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Three-For-Pong-Back-End
 
 * node with babel
