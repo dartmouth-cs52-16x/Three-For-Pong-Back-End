@@ -19,6 +19,8 @@
 * `POST /api/listings/join/:listingID` with parameter `{'user_id'}` will join a listing
 * `POST /api/listings/leave/:listingID` with parameter `{'user_id'}` will leave a listing
 
+**NOTE: `num_looking_for_game` is part of Listing's schema, which represents the number of people that the host already knows will play (including the host, so if the host is with his friend trying to play, this number would be two). On the contrary, `num_still_needed_for_game` is calculated by the server, which is the number of people still needed to bring the game to a total of four players (in the host example above, this would also be two, since two are hosting (=num_looking_for_game), and two are needed (=num_still_needed_for_game).**
+
 ## Data Structures
 
 ### Users
