@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-// users schema
+// location schema
 const LocationSchema = new Schema({
   location_name: String,
 });

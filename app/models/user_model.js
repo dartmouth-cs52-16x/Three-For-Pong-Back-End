@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-// users schema
+// user schema
 const UserSchema = new Schema({
   full_name: String,
   phone: String,
