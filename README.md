@@ -12,10 +12,10 @@
 * `GET /api/users/:userID` returns a user's info in the form `{'full_name', 'phone', 'can_host', 'default_location_id'}`
 * `POST /api/locations/` with post parameters `{'location_name'}` creates a new location
 * `GET /api/locations/` returns all locations in the form `[{location_id: '123', location_name: 'Baker Library'}, {...}, ...]`
-* `POST /api/listings/` with post parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}` 
+* `POST /api/listings/` with post parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}`
+* `GET /api/listings/` returns all listings in the form `{'listing_id', 'location_id', 'host_user_id', 'num_still_needed_for_game', 'start_time'}`
 * `PUT /api/listings/:listingID` with parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}` updates a listing
 * `DELETE /api/listings/:listingID` deletes the listing
-* `GET /api/listings/` returns all listings in the form `{'location_id', 'host_user_id', 'num_still_needed_for_game', 'start_time'}`
 * `POST /api/listings/join/:listingID` with parameter `{'user_id'}` will join a listing
 * `POST /api/listings/leave/:listingID` with parameter `{'user_id'}` will leave a listing
 
