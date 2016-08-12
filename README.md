@@ -26,6 +26,7 @@
 *	location_id (string from Locations)
 *	host_user_id (string from Users)
 *	users (JSON, in the form: [{user_id=123,is_confirmed=0},{user_id=456,is_confirmed=0}]
+*	num_looking_for_game (number of people the host has, including him/herself; if he needs 3fp, this would be 1)
 *	start_time (UTC time when the game will start)
 *	posted_time (UTC time when the listing was posted)
 
