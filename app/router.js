@@ -20,11 +20,11 @@ router.route('/locations')
 
 router.route('/listings')
   .post(Listings.createListing)
-  .get(Listings.getListings); // TODO
+  .get(Listings.getListings);
 
 router.route('/listings/:listingID')
-  .put(Listings.updateListing) // TODO
-  .delete(Listings.deleteListing); // TODO
+  .put(Listings.updateListing)
+  .delete(Listings.removeListing);
 
 router.route('/listings/join/:listingID')
   .post(Listings.joinListing); // TODO
