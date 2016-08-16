@@ -8,7 +8,7 @@ export const createListing = (req, res) => {
   listing.host_user_id = req.body.host_user_id;
   listing.users = [];
   listing.num_looking_for_game = req.body.num_looking_for_game;
-  listing.start_time = req.body.start_time;
+  listing.start_time = Date.parse(req.body.start_time);
   listing.save()
   .then(result => {
     res.json({ message: 'Listing created!' });
