@@ -32,14 +32,17 @@ export const updateUser = (req, res) => {
 
 export const getUser = (req, res) => {
   // Limits the response to 1 post
-  User.find({ _id: req.params.userID }).limit(1).exec((error, users) => {
+  User.findOne({ _id: req.params.userID }).exec((error, user) => {
     // Retrieve first element in array
-    const user = users[0];
-    res.json({
-      full_name: user.full_name,
-      phone: user.phone,
-      can_host: user.can_host,
-      defualt_location_id: user.default_location_id,
-    });
+    if (user) {
+      res.json({
+        full_name: user.full_name,
+        phone: user.phone,
+        can_host: user.can_host,
+        defualt_location_id: user.default_location_id,
+      });
+    } else {
+      res.json({ error });
+    }
   });
 };
