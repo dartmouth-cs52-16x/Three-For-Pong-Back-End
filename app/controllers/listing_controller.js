@@ -37,8 +37,8 @@ export const getListings = (req, res) => {
       } else {
         return {
           listing_id: listing._id,
-          location_id: listing.location_id._id,
-          host_user_id: listing.host_user_id._id,
+          location_id: listing.location_id,
+          host_user_id: listing.host_user_id,
           num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
           start_time: listing.start_time,
         };
