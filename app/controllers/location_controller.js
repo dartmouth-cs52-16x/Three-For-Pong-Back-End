@@ -13,7 +13,7 @@ export const createLocation = (req, res) => {
 };
 
 export const getLocations = (req, res) => {
-  Location.find().sort('-location_name').exec((error, locations) => {
+  Location.find().sort('location_name').exec((error, locations) => {
     res.json(locations.map(location => {
       return { location_id: location._id, location_name: location.location_name };
     }));
