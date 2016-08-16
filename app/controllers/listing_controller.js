@@ -24,15 +24,25 @@ export const getListings = (req, res) => {
   .sort('-start_time')
   .exec((error, listings) => {
     res.json(listings.map(listing => {
-      return {
-        listing_id: listing._id,
-        location_name: listing.location_id.location_name,
-        location_id: listing.location_id._id,
-        host_user_id: listing.host_user_id._id,
-        host_user_name: listing.host_user_id.full_name,
-        num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
-        start_time: listing.start_time,
-      };
+      if (listing.host_user_id && listing.location_id) {
+        return {
+          listing_id: listing._id,
+          location_name: listing.location_id.location_name,
+          location_id: listing.location_id._id,
+          host_user_id: listing.host_user_id._id,
+          host_user_name: listing.host_user_id.full_name,
+          num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
+          start_time: listing.start_time,
+        };
+      } else {
+        return {
+          listing_id: listing._id,
+          location_id: listing.location_id._id,
+          host_user_id: listing.host_user_id._id,
+          num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
+          start_time: listing.start_time,
+        };
+      }
     }));
   });
 };
