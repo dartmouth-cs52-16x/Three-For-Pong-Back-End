@@ -1,11 +1,16 @@
 import mongoose, { Schema } from 'mongoose';
 
+export const ALLOWED_YEARS = ['16', '17', '18', '19'];
+export const CLASS_YEAR_LENGTH = 2;
+export const EMAIL_ENDING = '@dartmouth.edu';
+
 // user schema
 const UserSchema = new Schema({
+  email: { type: String, unique: true, lowercase: true },
   full_name: String,
-  phone: String,
+  phone: Number,
   can_host: Boolean,
-  default_location_id: String,
+  default_location_id: { type: Schema.Types.ObjectId, ref: 'Location' },
   date_joined: { type: Date, default: Date.now },
 });
 
