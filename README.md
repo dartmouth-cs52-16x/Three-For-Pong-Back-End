@@ -7,11 +7,16 @@
 * airbnb eslint rules
 
 ## API Endpoints
+### Users
 * `POST /api/users/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}` creates a new user
 * `PUT /api/users/:userID` with parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id' }` updates a user
 * `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}`
+
+### Locations
 * `POST /api/locations/` with post parameters `{'location_name'}` creates a new location
 * `GET /api/locations/` returns all locations in the form `[{location_id: '123', location_name: 'Baker Library'}, {...}, ...]`
+
+### Listings
 * `POST /api/listings/` with post parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}`
 * `GET /api/listings/` returns all listings in the form `{'listing_id', 'location_id', 'host_user_id', 'num_still_needed_for_game', 'start_time'}`
 * `PUT /api/listings/:listingID` with parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}` updates a listing
@@ -48,4 +53,3 @@
 
 
 Procfile set up to run on [heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs#deploy-the-app)
-=======
