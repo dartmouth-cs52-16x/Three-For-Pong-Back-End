@@ -20,7 +20,7 @@ export const createListing = (req, res) => {
 
 export const getListings = (req, res) => {
   Listing.find()
-  .sort('-start_time')
+  .sort('start_time')
   .populate('location host_user')
   .exec((error, listings) => {
     res.json(listings.map(listing => {
