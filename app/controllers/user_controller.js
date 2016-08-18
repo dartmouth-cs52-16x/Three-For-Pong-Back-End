@@ -6,11 +6,11 @@ export const createUser = (req, res) => {
   const fullName = req.body.full_name;
   const phone = req.body.phone;
   const canHost = req.body.can_host;
-  const defaultLocationId = req.body.default_location_id;
+  const defaultLocation = req.body.default_location;
 
   if (!email || !fullName || !phone) {
     return res.status(422).send('You must provide an email, name, and phone');
-  } else if (canHost && !defaultLocationId) {
+  } else if (canHost && !defaultLocation) {
     return res.status(422).send('You must provide a default location if you can host');
   } else if (email.substr(email.length - EMAIL_ENDING.length) !== EMAIL_ENDING) {
     return res.status(422).send('Only Dartmouth students may signup');
@@ -32,7 +32,7 @@ export const createUser = (req, res) => {
     }
   }
 
-  Location.findOne({ _id: defaultLocationId })
+  Location.findOne({ _id: defaultLocation })
   .exec((error, location) => {
     if (!location || error) {
       console.log(error);
@@ -45,7 +45,7 @@ export const createUser = (req, res) => {
       user.full_name = fullName;
       user.phone = phone;
       user.can_host = canHost;
-      user.default_location_id = defaultLocationId;
+      user.default_location = defaultLocation;
 
       user.save()
       .then(result => {
@@ -58,13 +58,16 @@ export const createUser = (req, res) => {
   });
 };
 
+/*
+ TODO fix this to check arguments, as in create
+*/
 export const updateUser = (req, res) => {
   User.update({ _id: req.params.userID }, {
     email: req.body.email,
     full_name: req.body.full_name,
     phone: req.body.phone,
     can_host: req.body.can_host,
-    default_location_id: req.body.default_location_id,
+    default_location: req.body.default_location,
   }, {}, (error, raw) => {
     if (error === null) {
       res.json({ message: 'User updated!' });
@@ -76,7 +79,9 @@ export const updateUser = (req, res) => {
 
 export const getUser = (req, res) => {
   // Limits the response to 1 post
-  User.findOne({ _id: req.params.userID }).exec((error, user) => {
+  User.findOne({ _id: req.params.userID })
+  .populate('default_location')
+  .exec((error, user) => {
     // Retrieve first element in array
     if (user) {
       res.json({
@@ -84,7 +89,7 @@ export const getUser = (req, res) => {
         full_name: user.full_name,
         phone: user.phone,
         can_host: user.can_host,
-        defualt_location_id: user.default_location_id,
+        defualt_location: user.default_location,
       });
     } else {
       res.json({ error });

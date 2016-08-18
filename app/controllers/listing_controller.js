@@ -4,8 +4,8 @@ const GAME_SIZE = 4;
 
 export const createListing = (req, res) => {
   const listing = new Listing();
-  listing.location_id = req.body.location_id;
-  listing.host_user_id = req.body.host_user_id;
+  listing.location = req.body.location;
+  listing.host_user = req.body.host_user;
   listing.users = [];
   listing.num_looking_for_game = req.body.num_looking_for_game;
   listing.start_time = Date.parse(req.body.start_time);
@@ -21,13 +21,13 @@ export const createListing = (req, res) => {
 export const getListings = (req, res) => {
   Listing.find()
   .sort('-start_time')
-  .populate('location_id host_user_id')
+  .populate('location host_user')
   .exec((error, listings) => {
     res.json(listings.map(listing => {
       return {
         listing_id: listing._id,
-        location_id: listing.location_id,
-        host_user_id: listing.host_user_id,
+        location: listing.location,
+        host_user: listing.host_user,
         num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
         start_time: listing.start_time,
       };
@@ -37,8 +37,8 @@ export const getListings = (req, res) => {
 
 export const updateListing = (req, res) => {
   Listing.update({ _id: req.params.listingID }, {
-    location_id: req.body.location_id,
-    host_user_id: req.body.host_user_id,
+    location: req.body.location,
+    host_user: req.body.host_user,
     num_looking_for_game: req.body.num_looking_for_game,
     start_time: req.body.start_time,
   }, {}, (error, raw) => {
