@@ -4,8 +4,8 @@ const GAME_SIZE = 4;
 
 export const createListing = (req, res) => {
   const listing = new Listing();
-  listing.location = req.body.location;
-  listing.host_user = req.body.host_user;
+  listing.location = req.body.location_id;
+  listing.host_user = req.body.host_user_id;
   listing.users = [];
   listing.num_looking_for_game = req.body.num_looking_for_game;
   listing.start_time = Date.parse(req.body.start_time);
@@ -37,8 +37,8 @@ export const getListings = (req, res) => {
 
 export const updateListing = (req, res) => {
   Listing.update({ _id: req.params.listingID }, {
-    location: req.body.location,
-    host_user: req.body.host_user,
+    location: req.body.location_id,
+    host_user: req.body.host_user_id,
     num_looking_for_game: req.body.num_looking_for_game,
     start_time: req.body.start_time,
   }, {}, (error, raw) => {

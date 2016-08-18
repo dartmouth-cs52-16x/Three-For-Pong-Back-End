@@ -6,7 +6,7 @@ export const createUser = (req, res) => {
   const fullName = req.body.full_name;
   const phone = req.body.phone;
   const canHost = req.body.can_host;
-  const defaultLocation = req.body.default_location;
+  const defaultLocation = req.body.default_location_id;
 
   if (!email || !fullName || !phone) {
     return res.status(422).send('You must provide an email, name, and phone');
@@ -67,7 +67,7 @@ export const updateUser = (req, res) => {
     full_name: req.body.full_name,
     phone: req.body.phone,
     can_host: req.body.can_host,
-    default_location: req.body.default_location,
+    default_location: req.body.default_location_id,
   }, {}, (error, raw) => {
     if (error === null) {
       res.json({ message: 'User updated!' });
