@@ -2,9 +2,9 @@ import mongoose, { Schema } from 'mongoose';
 
 // listing schema
 const ListingSchema = new Schema({
-  location_id: String,
-  host_user_id: String,
-  users: [String],                                  // All the users (by user_id) playing
+  location_id: { type: Schema.Types.ObjectId, ref: 'Location' },
+  host_user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],     // All the users (by user_id) playing
   num_looking_for_game: Number,
   start_time: { type: Date },                       // UTC time when the game will start
   posted_time: { type: Date, default: Date.now },   // UTC time when the listing was posted

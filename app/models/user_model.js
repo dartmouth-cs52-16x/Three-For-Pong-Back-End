@@ -7,6 +7,7 @@ export const EMAIL_ENDING = '@dartmouth.edu';
 // user schema
 const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
+  password: String,
   full_name: String,
   phone: Number,
   can_host: Boolean,

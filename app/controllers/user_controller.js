@@ -33,15 +33,17 @@ export const createUser = (req, res) => {
   }
 
   Location.findOne({ _id: defaultLocationId })
-  .exec((location, error) => {
+  .exec((error, location) => {
     if (!location || error) {
+      console.log(error);
+      console.log(location);
       return res.status(422).send('That is not a valid location');
     } else {
       // Now, we know everything is valid
       const user = new User();
       user.email = email;
       user.full_name = fullName;
-      user.phone = phone.toString().parseInt();
+      user.phone = phone;
       user.can_host = canHost;
       user.default_location_id = defaultLocationId;
 

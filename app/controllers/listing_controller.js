@@ -21,6 +21,7 @@ export const createListing = (req, res) => {
 export const getListings = (req, res) => {
   Listing.find()
   .sort('-start_time')
+  .populate('location_id host_user_id')
   .exec((error, listings) => {
     res.json(listings.map(listing => {
       return {
