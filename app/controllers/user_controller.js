@@ -22,10 +22,11 @@ export const createUser = (req, res) => {
   const fullName = req.body.full_name;
   const phone = req.body.phone;
   const canHost = req.body.can_host;
+  const password = req.body.password;
   const defaultLocation = req.body.default_location_id;
 
-  if (!email || !fullName || !phone) {
-    return res.status(422).send('You must provide an email, name, and phone');
+  if (!email || !fullName || !phone || !password) {
+    return res.status(422).send('You must provide an email, name, phone, and password');
   } else if (canHost && !defaultLocation) {
     return res.status(422).send('You must provide a default location if you can host');
   } else if (email.substr(email.length - EMAIL_ENDING.length) !== EMAIL_ENDING) {
@@ -66,6 +67,7 @@ export const createUser = (req, res) => {
               user.phone = phone;
               user.can_host = canHost;
               user.default_location = defaultLocation;
+              user.password = password;
               user.verify_token = '123456';     // TODO make this random
               user.save()
               .then(result => {
