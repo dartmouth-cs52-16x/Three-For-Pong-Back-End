@@ -1,5 +1,21 @@
 import User, { EMAIL_ENDING, CLASS_YEAR_LENGTH, ALLOWED_YEARS } from '../models/user_model';
 import Location from '../models/location_model';
+// import dotenv from 'dotenv';
+import jwt from 'jwt-simple';
+
+// dotenv.config({ silent: true });
+
+
+// encodes a new token for a user object
+function tokenForUser(user) {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: user._id, iat: timestamp }, process.env.API_SECRET);
+}
+
+function tokenForUserId(userId) {
+  const timestamp = new Date().getTime();
+  return jwt.encode({ sub: userId, iat: timestamp }, process.env.API_SECRET);
+}
 
 export const createUser = (req, res) => {
   const email = req.body.email;
@@ -39,20 +55,33 @@ export const createUser = (req, res) => {
       console.log(location);
       return res.status(422).send('That is not a valid location');
     } else {
-      // Now, we know everything is valid
-      const user = new User();
-      user.email = email;
-      user.full_name = fullName;
-      user.phone = phone;
-      user.can_host = canHost;
-      user.default_location = defaultLocation;
-
-      user.save()
-      .then(result => {
-        res.json({ message: 'User created!' });
-      })
-      .catch(createError => {
-        res.json({ createError });
+      User.findOne({ email }, (findEmailError, existingEmail) => {
+        if (!existingEmail) {
+          User.findOne({ phone }, (findPhoneError, existingPhone) => {
+            if (!existingPhone) {
+              // Now, we know everything is valid
+              const user = new User();
+              user.email = email;
+              user.full_name = fullName;
+              user.phone = phone;
+              user.can_host = canHost;
+              user.default_location = defaultLocation;
+              user.verify_token = '123456';     // TODO make this random
+              user.save()
+              .then(result => {
+                // TODO email them this verify_token
+                res.send({ user_id: user._id });
+              })
+              .catch(createError => {
+                res.json({ createError });
+              });
+            } else {
+              res.status(422).send('That phone number is already registered');
+            }
+          });
+        } else {
+          res.status(422).send('That email is already registered');
+        }
       });
     }
   });
@@ -77,6 +106,18 @@ export const updateUser = (req, res) => {
   });
 };
 
+export const verifyUser = (req, res) => {
+  User.update({ _id: req.params.userID, verify_token: req.body.verify_token }, {
+    is_verified: true,
+  }, {}, (error, raw) => {
+    if (error === null && raw.ok) {
+      res.send({ user_id: req.params.userID, token: tokenForUserId(req.params.userID) });
+    } else {
+      res.status(422).send('Invalid token');
+    }
+  });
+};
+
 export const getUser = (req, res) => {
   // Limits the response to 1 post
   User.findOne({ _id: req.params.userID })
@@ -89,10 +130,14 @@ export const getUser = (req, res) => {
         full_name: user.full_name,
         phone: user.phone,
         can_host: user.can_host,
-        defualt_location: user.default_location,
+        default_location: user.default_location,
       });
     } else {
       res.json({ error });
     }
   });
+};
+
+export const loginUser = (req, res, next) => {
+  res.send({ user_id: req.user._id, token: tokenForUser(req.user) });
 };

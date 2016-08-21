@@ -8,9 +8,9 @@
 
 ## API Endpoints
 ### Users
-* `POST /api/users/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}` creates a new user
+* `POST /api/users/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}` creates a new user. Email must be a Dartmouth email with an allowed class year.
 * `PUT /api/users/:userID` with parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id' }` updates a user
-* `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}`
+* `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location': {'_id', 'location_name'} }`
 
 ### Locations
 * `POST /api/locations/` with post parameters `{'location_name'}` creates a new location

@@ -2,34 +2,36 @@ import { Router } from 'express';
 import * as Users from './controllers/user_controller';
 import * as Locations from './controllers/location_controller';
 import * as Listings from './controllers/listing_controller';
+import { requireAuth, requireSignin } from './services/passport';
 
 const router = Router();
 
 // routes go here
 
-router.route('/users')
-  .post(Users.createUser);
+router.post('/signin', requireSignin, Users.loginUser);
+router.post('/signup', Users.createUser);
+router.post('/verify/:userID', Users.verifyUser);
 
 router.route('/users/:userID')
-  .put(Users.updateUser)
-  .get(Users.getUser);
+  .put(requireAuth, Users.updateUser)
+  .get(requireAuth, Users.getUser);
 
 router.route('/locations')
-  .post(Locations.createLocation)
+  .post(requireAuth, Locations.createLocation)  // TODO remove this
   .get(Locations.getLocations);
 
 router.route('/listings')
-  .post(Listings.createListing)
-  .get(Listings.getListings);
+  .post(requireAuth, Listings.createListing)
+  .get(requireAuth, Listings.getListings);
 
 router.route('/listings/:listingID')
-  .put(Listings.updateListing)
-  .delete(Listings.removeListing);
+  .put(requireAuth, Listings.updateListing)
+  .delete(requireAuth, Listings.removeListing);
 
 router.route('/listings/join/:listingID')
-  .post(Listings.joinListing); // TODO
+  .post(requireAuth, Listings.joinListing); // TODO
 
 router.route('/listings/leave/:listingID')
-  .post(Listings.leaveListing); // TODO
+  .post(requireAuth, Listings.leaveListing); // TODO
 
 export default router;
