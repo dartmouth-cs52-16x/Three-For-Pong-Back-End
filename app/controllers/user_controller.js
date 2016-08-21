@@ -2,7 +2,7 @@ import User, { EMAIL_ENDING, CLASS_YEAR_LENGTH, ALLOWED_YEARS } from '../models/
 import Location from '../models/location_model';
 // import dotenv from 'dotenv';
 import jwt from 'jwt-simple';
-
+import * as sendgrid from '../services/sendgrid';
 // dotenv.config({ silent: true });
 
 
@@ -24,6 +24,7 @@ export const createUser = (req, res) => {
   const canHost = req.body.can_host;
   const password = req.body.password;
   const defaultLocation = req.body.default_location_id;
+  const verifyToken = Math.floor((Math.random() * 89999) + 10000);
 
   if (!email || !fullName || !phone || !password) {
     return res.status(422).send('You must provide an email, name, phone, and password');
@@ -68,10 +69,10 @@ export const createUser = (req, res) => {
               user.can_host = canHost;
               user.default_location = defaultLocation;
               user.password = password;
-              user.verify_token = '123456';     // TODO make this random
+              user.verify_token = verifyToken;
               user.save()
               .then(result => {
-                // TODO email them this verify_token
+                sendgrid.sendEmail(user.email, user.full_name, user.verify_token);
                 res.send({ user_id: user._id });
               })
               .catch(createError => {
