@@ -8,15 +8,17 @@
 
 ## API Endpoints
 ### Users
-* `POST /api/users/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id'}` creates a new user. Email must be a Dartmouth email with an allowed class year.
-* `PUT /api/users/:userID` with parameters `{'email', 'full_name', 'phone', 'can_host', 'default_location_id' }` updates a user
-* `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location': {'_id', 'location_name'} }`
+* `POST /api/signup/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'password', 'default_location_id'}` creates a new user. Email must be a Dartmouth email with an allowed class year. This returns a user_id.
+* `POST /api/verify/:userID` with post parameter `{'verify_token'}` verifies a user and retrieves a token and user_id
+* `POST /api/signin/` with post parameters `{'email', 'password'}` to retrieve a token and user_id
+* `PUT /api/users/:userID` with parameters `{'email', 'full_name', 'phone', 'can_host', 'password' 'default_location_id' }` updates a user. This is not done yet.
+* `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location': {'_id', 'location_name'} }`. This requires a token.
 
 ### Locations
-* `POST /api/locations/` with post parameters `{'location_name'}` creates a new location
+* `POST /api/locations/` with post parameters `{'location_name'}` creates a new location (you need to send a token, in CURL you'd do this with -H "Authentication: INSERT_TOKEN_HERE")
 * `GET /api/locations/` returns all locations in the form `[{location_id: '123', location_name: 'Baker Library'}, {...}, ...]`
 
-### Listings
+### Listings (All require token)
 * `POST /api/listings/` with post parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}`
 * `GET /api/listings/` returns all listings in the form `{'listing_id', 'location_id', 'host_user_id', 'num_still_needed_for_game', 'start_time'}`
 * `PUT /api/listings/:listingID` with parameters `{'location_id', 'host_user_id', 'num_looking_for_game', 'start_time'}` updates a listing
