@@ -2,12 +2,17 @@ import Listing from '../models/listing_model';
 
 const GAME_SIZE = 4;
 
+const removeOldListings = () => {
+
+};
+
 export const createListing = (req, res) => {
   const listing = new Listing();
   listing.location = req.body.location_id;
   listing.host_user = req.body.host_user_id;
   listing.users = [];
   listing.num_looking_for_game = req.body.num_looking_for_game;
+  listing.num_still_needed_for_game = GAME_SIZE - listing.num_looking_for_game;
   listing.start_time = Date.parse(req.body.start_time);
   listing.save()
   .then(result => {
@@ -19,7 +24,7 @@ export const createListing = (req, res) => {
 };
 
 export const getListings = (req, res) => {
-  Listing.find()
+  Listing.find({ num_still_needed_for_game: { $gt: 0 } })
   .sort('start_time')
   .populate('location host_user')
   .exec((error, listings) => {
@@ -28,18 +33,20 @@ export const getListings = (req, res) => {
         listing_id: listing._id,
         location: listing.location,
         host_user: listing.host_user,
-        num_still_needed_for_game: GAME_SIZE - listing.num_looking_for_game - listing.users.length,
+        num_still_needed_for_game: listing.num_still_needed_for_game,
         start_time: listing.start_time,
       };
     }));
   });
 };
 
+// TODO ensure that we actually get "num_still_needed_for_game"
 export const updateListing = (req, res) => {
   Listing.update({ _id: req.params.listingID }, {
     location: req.body.location_id,
     host_user: req.body.host_user_id,
     num_looking_for_game: req.body.num_looking_for_game,
+    num_still_needed_for_game: req.body.num_still_needed_for_game,
     start_time: req.body.start_time,
   }, {}, (error, raw) => {
     if (error === null) {
@@ -67,10 +74,13 @@ export const joinListing = (req, res) => {
     const listing = listings[0];
     // Add the new user to the array and update it back in the database
     listing.users.push(req.body.user_id);
+    listing.num_still_needed_for_game--;
     Listing.update({ _id: req.params.listingID }, {
       users: listing.users,
+      num_still_needed_for_game: listing.num_still_needed_for_game,
     }, {}, (updateError, raw) => {
       if (updateError === null) {
+        // TODO add SMS here
         res.json({ message: 'A user joined this listing!' });
       } else {
         res.json({ updateError });
@@ -91,8 +101,12 @@ export const leaveListing = (req, res) => {
         newUsersArray.push(userId);
       }
     });
+
+    listing.num_still_needed_for_game++;
+
     Listing.update({ _id: req.params.listingID }, {
       users: newUsersArray,
+      num_still_needed_for_game: listing.num_still_needed_for_game,
     }, {}, (updateError, raw) => {
       if (updateError === null) {
         res.json({ message: 'A user left this listing!' });
