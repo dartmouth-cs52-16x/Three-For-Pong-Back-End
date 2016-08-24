@@ -52,7 +52,7 @@ export const createUser = (req, res) => {
 
   Location.findOne({ _id: defaultLocation })
   .exec((error, location) => {
-    if (!location || error) {
+    if (canHost && (!location || error)) {
       console.log(error);
       console.log(location);
       return res.status(422).send('That is not a valid location');
@@ -90,22 +90,60 @@ export const createUser = (req, res) => {
   });
 };
 
-/*
- TODO fix this to check arguments, as in create
-*/
 export const updateUser = (req, res) => {
-  User.update({ _id: req.params.userID }, {
-    email: req.body.email,
-    full_name: req.body.full_name,
-    phone: req.body.phone,
-    can_host: req.body.can_host,
-    default_location: req.body.default_location_id,
-  }, {}, (error, raw) => {
-    if (error === null) {
-      res.json({ message: 'User updated!' });
-    } else {
-      res.json({ error });
+  let fullName = req.body.full_name;
+  let phone = req.body.phone;
+  let canHost = req.body.can_host;
+  let password = req.body.password;
+  let defaultLocation = req.body.default_location_id;
+
+  // Only change the fields that are supplied
+  if (fullName === null) {
+    fullName = req.user.full_name;
+  }
+  if (phone === null) {
+    phone = req.user.phone;
+  }
+  if (canHost === null) {
+    canHost = req.user.canHost;
+  }
+  if (password === null) {
+    password = req.user.password;
+  }
+  if (defaultLocation === null && req.body.can_host !== false) {    // if req.body.can_host is false, don't use old value
+    defaultLocation = req.user.defaultLocation;
+  } else if (defaultLocation === null && canHost === false) {    // if we can't host and no defaultLocation provided
+    defaultLocation = '';
+  }
+
+  if (canHost && !defaultLocation) {
+    return res.status(422).send('You must provide a default location if you can host');
+  } else if (canHost !== true && canHost !== false) {
+    return res.status(422).send('Ability to host must be true or false');
+  } else if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
+    return res.status(422).send('Your phone number must be ten digits with no hyphens or parentheses');
+  }
+
+  Location.findOne({ _id: defaultLocation })
+  .exec((error, location) => {
+    if (canHost && (!location || error)) {
+      console.log(error);
+      console.log(location);
+      return res.status(422).send('That is not a valid location');
     }
+    User.update({ _id: req.params.userID }, {
+      full_name: fullName,
+      phone,
+      can_host: canHost,
+      password,
+      default_location: defaultLocation,
+    }, {}, (updateError, raw) => {
+      if (updateError === null) {
+        res.json({ message: 'User updated!' });
+      } else {
+        res.json({ error });
+      }
+    });
   });
 };
 

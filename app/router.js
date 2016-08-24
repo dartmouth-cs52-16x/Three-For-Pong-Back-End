@@ -29,9 +29,9 @@ router.route('/listings/:listingID')
   .delete(requireAuth, Listings.removeListing);
 
 router.route('/listings/join/:listingID')
-  .post(requireAuth, Listings.joinListing); // TODO
+  .post(requireAuth, Listings.joinListing);
 
 router.route('/listings/leave/:listingID')
-  .post(requireAuth, Listings.leaveListing); // TODO
+  .post(requireAuth, Listings.leaveListing);
 
 export default router;

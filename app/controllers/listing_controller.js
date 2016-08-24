@@ -84,12 +84,15 @@ export const leaveListing = (req, res) => {
   Listing.find({ _id: req.params.listingID }).limit(1).exec((findError, listings) => {
     // Retrieve first element in array
     const listing = listings[0];
+    const newUsersArray = [];
     // Remove the user from the array and update it back in the database
-    listing.users = listing.users.filter((userId) => {
-      return userId !== req.body.user_id;
+    listing.users.forEach((userId) => {
+      if (userId !== req.body.user_id) {
+        newUsersArray.push(userId);
+      }
     });
     Listing.update({ _id: req.params.listingID }, {
-      users: listing.users,
+      users: newUsersArray,
     }, {}, (updateError, raw) => {
       if (updateError === null) {
         res.json({ message: 'A user left this listing!' });
