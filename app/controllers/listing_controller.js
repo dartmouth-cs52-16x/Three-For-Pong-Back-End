@@ -26,13 +26,14 @@ export const createListing = (req, res) => {
 export const getListings = (req, res) => {
   Listing.find({ num_still_needed_for_game: { $gt: 0 } })
   .sort('start_time')
-  .populate('location host_user')
+  .populate('location host_user users')
   .exec((error, listings) => {
     res.json(listings.map(listing => {
       return {
         listing_id: listing._id,
         location: listing.location,
         host_user: listing.host_user,
+        users: listing.users,
         num_still_needed_for_game: listing.num_still_needed_for_game,
         start_time: listing.start_time,
       };
