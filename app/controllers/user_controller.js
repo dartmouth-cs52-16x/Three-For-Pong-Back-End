@@ -148,22 +148,41 @@ export const updateUser = (req, res) => {
       return res.status(423).send('That is not a valid location');
     }
     console.log('About to update the user');
-    User.update({ _id: req.params.userID }, {
-      full_name: fullName,
-      phone,
-      can_host: canHost,
-      password,
-      default_location: defaultLocation,
-    }, {}, (updateError, raw) => {
-      if (updateError === null) {
-        console.log('Updated the user');
-        res.json({ message: 'User updated!' });
-      } else {
-        console.log('Failed to update the user');
-        console.log(updateError);
-        res.json({ updateError });
-      }
-    });
+    if (canHost) {
+      User.update({ _id: req.params.userID }, {
+        full_name: fullName,
+        phone,
+        can_host: canHost,
+        password,
+        default_location: defaultLocation,
+      }, {}, (updateError, raw) => {
+        if (updateError === null) {
+          console.log('Updated the user');
+          res.json({ message: 'User updated!' });
+        } else {
+          console.log('Failed to update the user');
+          console.log(updateError);
+          res.json({ updateError });
+        }
+      });
+    } else {
+      User.update({ _id: req.params.userID }, {
+        full_name: fullName,
+        phone,
+        can_host: canHost,
+        password,
+        $unset: { default_location: 1 },
+      }, {}, (updateError, raw) => {
+        if (updateError === null) {
+          console.log('Updated the user');
+          res.json({ message: 'User updated!' });
+        } else {
+          console.log('Failed to update the user');
+          console.log(updateError);
+          res.json({ updateError });
+        }
+      });
+    }
   });
 };
 
