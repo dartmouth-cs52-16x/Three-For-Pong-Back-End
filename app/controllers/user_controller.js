@@ -112,6 +112,20 @@ export const updateUser = (req, res) => {
     canHost = req.user.can_host;
     console.log('Set canHost to default');
     console.log(canHost);
+    if (canHost === true) {
+      defaultLocation = req.user.default_location;
+    }
+  } else if (canHost === true) {
+    // Here, canHost was set as true
+    if (defaultLocation === undefined) {
+      return res.status(418).send('You must enter a default location');
+    }
+  } else if (canHost === false) {
+    // Here, canHost was set as false
+    defaultLocation = '';
+  } else {
+    // Error with canHost
+    return res.status(419).send('You must either not set can_host, set it to true, or set it to false');
   }
   if (password === undefined) {
     password = req.user.password;
@@ -121,17 +135,7 @@ export const updateUser = (req, res) => {
   console.log('canHost is');
   console.log(canHost);
 
-  if (defaultLocation == null && (req.body.can_host !== false || canHost)) {    // if req.body.can_host is false, don't use old value
-    defaultLocation = req.user.default_location;
-  } else if (defaultLocation == null && canHost === false) {    // if we can't host and no defaultLocation provided
-    defaultLocation = '';
-  }
-
-  if (canHost && !defaultLocation) {
-    return res.status(420).send('You must provide a default location if you can host');
-  } else if (canHost !== true && canHost !== false) {
-    return res.status(421).send('Ability to host must be true or false');
-  } else if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
+  if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
     return res.status(422).send('Your phone number must be ten digits with no hyphens or parentheses');
   }
 
