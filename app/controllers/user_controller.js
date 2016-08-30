@@ -160,7 +160,8 @@ export const updateUser = (req, res) => {
         res.json({ message: 'User updated!' });
       } else {
         console.log('Failed to update the user');
-        res.json({ error });
+        console.log(updateError);
+        res.json({ updateError });
       }
     });
   });
