@@ -139,6 +139,7 @@ export const updateUser = (req, res) => {
     return res.status(422).send('Your phone number must be ten digits with no hyphens or parentheses');
   }
 
+  console.log('Verifying the location');
   Location.findOne({ _id: defaultLocation })
   .exec((error, location) => {
     if (canHost && (!location || error)) {
@@ -146,6 +147,7 @@ export const updateUser = (req, res) => {
       console.log(location);
       return res.status(423).send('That is not a valid location');
     }
+    console.log('About to update the user');
     User.update({ _id: req.params.userID }, {
       full_name: fullName,
       phone,
@@ -154,8 +156,10 @@ export const updateUser = (req, res) => {
       default_location: defaultLocation,
     }, {}, (updateError, raw) => {
       if (updateError === null) {
+        console.log('Updated the user');
         res.json({ message: 'User updated!' });
       } else {
+        console.log('Failed to update the user');
         res.json({ error });
       }
     });
