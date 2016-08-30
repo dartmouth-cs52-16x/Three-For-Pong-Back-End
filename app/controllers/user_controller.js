@@ -121,9 +121,9 @@ export const updateUser = (req, res) => {
   console.log('canHost is');
   console.log(canHost);
 
-  if (defaultLocation === null && req.body.can_host !== false) {    // if req.body.can_host is false, don't use old value
-    defaultLocation = req.user.defaultLocation;
-  } else if (defaultLocation === null && canHost === false) {    // if we can't host and no defaultLocation provided
+  if (defaultLocation == null && (req.body.can_host !== false || canHost)) {    // if req.body.can_host is false, don't use old value
+    defaultLocation = req.user.default_location;
+  } else if (defaultLocation == null && canHost === false) {    // if we can't host and no defaultLocation provided
     defaultLocation = '';
   }
 
