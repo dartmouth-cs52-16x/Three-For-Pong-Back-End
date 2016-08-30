@@ -109,7 +109,7 @@ export const updateUser = (req, res) => {
     console.log(phone);
   }
   if (canHost === undefined) {
-    canHost = req.user.canHost;
+    canHost = req.user.can_host;
     console.log('Set canHost to default');
     console.log(canHost);
   }
