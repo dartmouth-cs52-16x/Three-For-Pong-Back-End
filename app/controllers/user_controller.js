@@ -100,16 +100,27 @@ export const updateUser = (req, res) => {
   // Only change the fields that are supplied
   if (fullName === null) {
     fullName = req.user.full_name;
+    console.log('Set full name to default');
+    console.log(fullName);
   }
   if (phone === null) {
     phone = req.user.phone;
+    console.log('Set phone to default');
+    console.log(phone);
   }
   if (canHost === null) {
     canHost = req.user.canHost;
+    console.log('Set canHost to default');
+    console.log(canHost);
   }
   if (password === null) {
     password = req.user.password;
+    console.log('Set password to default');
+    console.log(password);
   }
+  console.log('canHost is');
+  console.log(canHost);
+
   if (defaultLocation === null && req.body.can_host !== false) {    // if req.body.can_host is false, don't use old value
     defaultLocation = req.user.defaultLocation;
   } else if (defaultLocation === null && canHost === false) {    // if we can't host and no defaultLocation provided
