@@ -104,7 +104,7 @@ export const updateUser = (req, res) => {
     console.log(fullName);
   }
   if (phone === undefined) {
-    phone = req.user.phone;
+    phone = req.user.phone.toString();
     console.log('Set phone to default');
     console.log(phone);
   }
