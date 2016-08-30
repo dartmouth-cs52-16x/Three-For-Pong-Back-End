@@ -11,7 +11,7 @@
 * `POST /api/signup/` with post parameters `{'email', 'full_name', 'phone', 'can_host', 'password', 'default_location_id'}` creates a new user. Email must be a Dartmouth email with an allowed class year. This returns a user_id.
 * `POST /api/verify/:userID` with post parameter `{'verify_token'}` verifies a user and retrieves a token and user_id
 * `POST /api/signin/` with post parameters `{'email', 'password'}` to retrieve a token and user_id
-* `PUT /api/users/:userID` with parameters `{'full_name', 'phone', 'can_host', 'password', 'default_location_id' }` updates a user. This is not done yet.
+* `PUT /api/users/:userID` with parameters `{'full_name', 'phone', 'can_host', 'password', 'default_location_id' }` updates a user.
 * `GET /api/users/:userID` returns a user's info in the form `{'email', 'full_name', 'phone', 'can_host', 'default_location': {'_id', 'location_name'} }`. This requires a token.
 
 ### Locations

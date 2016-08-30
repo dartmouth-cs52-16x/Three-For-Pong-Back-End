@@ -92,28 +92,41 @@ export const joinListing = (req, res) => {
 
 export const leaveListing = (req, res) => {
   // First, retrieve the Users[] array for the listing
-  Listing.find({ _id: req.params.listingID }).limit(1).exec((findError, listings) => {
+  Listing.find({ _id: req.params.listingID })
+  .populate('users')
+  .limit(1)
+  .exec((findError, listings) => {
     // Retrieve first element in array
     const listing = listings[0];
     const newUsersArray = [];
     // Remove the user from the array and update it back in the database
-    listing.users.forEach((userId) => {
+    let foundMatch = false;
+    console.log('Iterating through the users');
+    listing.users.forEach((user) => {
+      const userId = user._id;
+      console.log(`Should I add ${userId}`);
       if (userId !== req.body.user_id) {
+        console.log(`Adding since no match to ${req.body.user_id}`);
         newUsersArray.push(userId);
-      }
-    });
-
-    listing.num_still_needed_for_game++;
-
-    Listing.update({ _id: req.params.listingID }, {
-      users: newUsersArray,
-      num_still_needed_for_game: listing.num_still_needed_for_game,
-    }, {}, (updateError, raw) => {
-      if (updateError === null) {
-        res.json({ message: 'A user left this listing!' });
       } else {
-        res.json({ updateError });
+        console.log(`Didn't add ${userId} since it is equal to ${req.body.user_id}`);
+        foundMatch = true;
       }
     });
+
+    if (foundMatch === true) {
+      Listing.update({ _id: req.params.listingID }, {
+        users: newUsersArray,
+        num_still_needed_for_game: listing.num_still_needed_for_game + 1,
+      }, {}, (updateError, raw) => {
+        if (updateError === null) {
+          res.json({ message: 'A user left this listing!' });
+        } else {
+          res.json({ updateError });
+        }
+      });
+    } else {
+      res.json({ message: 'You are not a part of this game!' });
+    }
   });
 };
