@@ -70,9 +70,23 @@ export const removeListing = (req, res) => {
 
 export const joinListing = (req, res) => {
   // First, retrieve the Users[] array for the listing
-  Listing.find({ _id: req.params.listingID }).limit(1).exec((findError, listings) => {
+  Listing.find({ _id: req.params.listingID })
+  .limit(1)
+  .populate('users')
+  .exec((findError, listings) => {
     // Retrieve first element in array
     const listing = listings[0];
+    // Check if they are already in the game
+    let foundMatch = false;
+    listing.users.forEach((user) => {
+      if (user._id.toString() === req.body.user_id) {
+        foundMatch = true;
+      }
+    });
+
+    if (!foundMatch) {
+      res.json({ message: 'You already joined this game' });
+    }
     // Add the new user to the array and update it back in the database
     listing.users.push(req.body.user_id);
     listing.num_still_needed_for_game--;
@@ -105,7 +119,7 @@ export const leaveListing = (req, res) => {
     listing.users.forEach((user) => {
       const userId = user._id;
       console.log(`Should I add ${userId}`);
-      if (userId !== req.body.user_id) {
+      if (userId.toString() !== req.body.user_id) {
         console.log(`Adding since no match to ${req.body.user_id}`);
         newUsersArray.push(userId);
       } else {
