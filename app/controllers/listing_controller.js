@@ -85,7 +85,7 @@ export const joinListing = (req, res) => {
     });
 
     if (!foundMatch) {
-      res.json({ message: 'You already joined this game' });
+      return res.json({ message: 'You already joined this game' });
     }
     // Add the new user to the array and update it back in the database
     listing.users.push(req.body.user_id);
@@ -115,7 +115,7 @@ export const leaveListing = (req, res) => {
     const newUsersArray = [];
     // Remove the user from the array and update it back in the database
     let foundMatch = false;
-    console.log('Iterating through the users');
+    console.log('Iterating through the users for the leave function');
     listing.users.forEach((user) => {
       const userId = user._id;
       console.log(`Should I add ${userId}`);
