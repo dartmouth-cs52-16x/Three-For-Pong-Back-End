@@ -98,22 +98,22 @@ export const updateUser = (req, res) => {
   let defaultLocation = req.body.default_location_id;
 
   // Only change the fields that are supplied
-  if (fullName === null) {
+  if (fullName === undefined) {
     fullName = req.user.full_name;
     console.log('Set full name to default');
     console.log(fullName);
   }
-  if (phone === null) {
+  if (phone === undefined) {
     phone = req.user.phone;
     console.log('Set phone to default');
     console.log(phone);
   }
-  if (canHost === null) {
+  if (canHost === undefined) {
     canHost = req.user.canHost;
     console.log('Set canHost to default');
     console.log(canHost);
   }
-  if (password === null) {
+  if (password === undefined) {
     password = req.user.password;
     console.log('Set password to default');
     console.log(password);
