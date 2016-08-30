@@ -84,7 +84,7 @@ export const joinListing = (req, res) => {
       }
     });
 
-    if (!foundMatch) {
+    if (foundMatch) {
       return res.json({ message: 'You already joined this game' });
     }
     // Add the new user to the array and update it back in the database
