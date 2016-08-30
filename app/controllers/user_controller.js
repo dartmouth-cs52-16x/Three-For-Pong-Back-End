@@ -117,9 +117,9 @@ export const updateUser = (req, res) => {
   }
 
   if (canHost && !defaultLocation) {
-    return res.status(422).send('You must provide a default location if you can host');
+    return res.status(420).send('You must provide a default location if you can host');
   } else if (canHost !== true && canHost !== false) {
-    return res.status(422).send('Ability to host must be true or false');
+    return res.status(421).send('Ability to host must be true or false');
   } else if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
     return res.status(422).send('Your phone number must be ten digits with no hyphens or parentheses');
   }
@@ -129,7 +129,7 @@ export const updateUser = (req, res) => {
     if (canHost && (!location || error)) {
       console.log(error);
       console.log(location);
-      return res.status(422).send('That is not a valid location');
+      return res.status(423).send('That is not a valid location');
     }
     User.update({ _id: req.params.userID }, {
       full_name: fullName,
