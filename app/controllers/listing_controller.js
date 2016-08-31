@@ -1,10 +1,8 @@
 import Listing from '../models/listing_model';
+import User from '../models/user_model';
+import * as sendgrid from '../services/sendgrid';
 
 const GAME_SIZE = 4;
-
-const removeOldListings = () => {
-
-};
 
 export const createListing = (req, res) => {
   const listing = new Listing();
@@ -73,7 +71,7 @@ export const joinListing = (req, res) => {
   // First, retrieve the Users[] array for the listing
   Listing.find({ _id: req.params.listingID })
   .limit(1)
-  .populate('users')
+  .populate('users host_user location')
   .exec((findError, listings) => {
     // Retrieve first element in array
     const listing = listings[0];
@@ -85,7 +83,7 @@ export const joinListing = (req, res) => {
       }
     });
 
-    if (foundMatch) {
+    if (foundMatch || req.body.user_id === listing.host_user._id) {
       return res.json({ message: 'You already joined this game' });
     }
     // Add the new user to the array and update it back in the database
@@ -96,7 +94,17 @@ export const joinListing = (req, res) => {
       num_still_needed_for_game: listing.num_still_needed_for_game,
     }, {}, (updateError, raw) => {
       if (updateError === null) {
-        // TODO add SMS here
+        // If everyone joined, send it along
+        if (listing.num_still_needed_for_game === 0) {
+          sendgrid.sendGameEmail(listing.host_user.email, listing.host_user.full_name, listing.location.location_name, listing.start_time, listing.host_user.phone);
+          listing.users.forEach((user) => {
+            User.find({ _id: user })
+            .limit(1)
+            .exec((sendEmailError, usr) => {
+              sendgrid.sendGameEmail(usr.email, usr.full_name, listing.location.location_name, listing.start_time, listing.host_user.phone);
+            });
+          });
+        }
         res.json({ message: 'A user joined this listing!' });
       } else {
         res.json({ updateError });
