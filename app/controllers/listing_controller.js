@@ -24,7 +24,8 @@ export const createListing = (req, res) => {
 };
 
 export const getListings = (req, res) => {
-  Listing.find({ num_still_needed_for_game: { $gt: 0 } })
+  const now = Date.getNow();
+  Listing.find({ num_still_needed_for_game: { $gt: 0 }, start_time: { $gt: now } })
   .sort('start_time')
   .populate('location host_user users')
   .exec((error, listings) => {
