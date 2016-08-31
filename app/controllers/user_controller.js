@@ -124,7 +124,7 @@ export const updateUser = (req, res) => {
     // Here, canHost was set as false
     defaultLocation = '';
   } else {
-    // Error with canHost
+    // Error with canHost.
     return res.status(419).send('You must either not set can_host, set it to true, or set it to false');
   }
   if (password === undefined) {
