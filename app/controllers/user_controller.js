@@ -149,21 +149,21 @@ export const updateUser = (req, res) => {
     }
     console.log('About to update the user');
     if (canHost) {
-      const user = req.user;
-      user.full_name = fullName;
-      user.phone = phone;
-      user.can_host = canHost;
-      user.password = password;
-      user.default_location = defaultLocation;
-      user.save()
-      .then(result => {
-        console.log('Updated the user');
-        res.json({ message: 'User updated!' });
-      })
-      .catch(updateError => {
-        console.log('Failed to update the user');
-        console.log(updateError);
-        res.json({ updateError });
+      User.update({ _id: req.params.userID }, {
+        full_name: fullName,
+        phone,
+        can_host: canHost,
+        password,
+        default_location: defaultLocation,
+      }, {}, (updateError, raw) => {
+        if (updateError === null) {
+          console.log('Updated the user');
+          res.json({ message: 'User updated!' });
+        } else {
+          console.log('Failed to update the user');
+          console.log(updateError);
+          res.json({ updateError });
+        }
       });
     } else {
       User.update({ _id: req.params.userID }, {
