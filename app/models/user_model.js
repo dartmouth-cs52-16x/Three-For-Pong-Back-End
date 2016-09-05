@@ -1,9 +1,9 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt-nodejs';
 
-export const ALLOWED_YEARS = ['16', '17', '18', '19'];
-export const CLASS_YEAR_LENGTH = 2;
-export const EMAIL_ENDING = '@dartmouth.edu';
+// export const ALLOWED_YEARS = ['16', '17', '18', '19'];
+// export const CLASS_YEAR_LENGTH = 2;
+// export const EMAIL_ENDING = '@dartmouth.edu';
 
 // user schema
 const UserSchema = new Schema({
