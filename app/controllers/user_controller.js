@@ -30,24 +30,24 @@ export const createUser = (req, res) => {
     return res.status(422).send('You must provide an email, name, phone, and password');
   } else if (canHost && !defaultLocation) {
     return res.status(422).send('You must provide a default location if you can host');
-  } else if (email.substr(email.length - EMAIL_ENDING.length) !== EMAIL_ENDING) {
-    return res.status(422).send('Only Dartmouth students may signup');
+  // } else if (email.substr(email.length - EMAIL_ENDING.length) !== EMAIL_ENDING) {
+    // return res.status(422).send('Only Dartmouth students may signup');
   } else if (canHost !== true && canHost !== false) {
     return res.status(422).send('Ability to host must be true or false');
   } else if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
     return res.status(422).send('Your phone number must be ten digits with no hyphens or parentheses');
   } else {
     // Verify class year
-    let classYear = 0;
-    const emailClassYear = email.substr(email.length - EMAIL_ENDING.length - CLASS_YEAR_LENGTH, CLASS_YEAR_LENGTH);
-    ALLOWED_YEARS.forEach((allowedClassYear) => {
-      if (emailClassYear === allowedClassYear) {
-        classYear = parseInt(emailClassYear, 10);
-      }
-    });
-    if (classYear === 0) {
-      return res.status(422).send('Your class year is not allowed yet');
-    }
+    // let classYear = 0;
+    // const emailClassYear = email.substr(email.length - EMAIL_ENDING.length - CLASS_YEAR_LENGTH, CLASS_YEAR_LENGTH);
+    // ALLOWED_YEARS.forEach((allowedClassYear) => {
+    //   if (emailClassYear === allowedClassYear) {
+    //     classYear = parseInt(emailClassYear, 10);
+    //   }
+    // });
+    // if (classYear === 0) {
+    //   return res.status(422).send('Your class year is not allowed yet');
+    // }
   }
 
   Location.findOne({ _id: defaultLocation })
