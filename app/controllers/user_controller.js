@@ -1,4 +1,5 @@
-import User, { EMAIL_ENDING, CLASS_YEAR_LENGTH, ALLOWED_YEARS } from '../models/user_model';
+// import User, { EMAIL_ENDING, CLASS_YEAR_LENGTH, ALLOWED_YEARS } from '../models/user_model';
+import User from '../models/user_model';
 import Location from '../models/location_model';
 // import dotenv from 'dotenv';
 import jwt from 'jwt-simple';
@@ -31,7 +32,7 @@ export const createUser = (req, res) => {
   } else if (canHost && !defaultLocation) {
     return res.status(422).send('You must provide a default location if you can host');
   // } else if (email.substr(email.length - EMAIL_ENDING.length) !== EMAIL_ENDING) {
-    // return res.status(422).send('Only Dartmouth students may signup');
+  //   return res.status(422).send('Only Dartmouth students may signup');
   } else if (canHost !== true && canHost !== false) {
     return res.status(422).send('Ability to host must be true or false');
   } else if (phone.match(/\d/g).length !== 10) {      // http://stackoverflow.com/questions/4338267/validate-phone-number-with-javascript
